@@ -22,7 +22,7 @@ services:
     # na notação porta_de_fora:porta_de_dentro
     ports:
       # Expõe a porta padrão da aplicação: altere aqui caso use outra porta
-      - 3001:3001
+      - 3006:3001
       - 9229:9229
     # Variáveis de ambiente para comunicação com o banco de dados (requisito 12)
     environment:
