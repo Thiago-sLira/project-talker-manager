@@ -1,10 +1,11 @@
 const express = require('express');
+const validateLogin = require('../middlewares/validateLogin');
 
 const router = express.Router();
 
 router.use(express.json());
 
-router.post('/', async (request, response) => {
+router.post('/', validateLogin, async (request, response) => {
     // const { email, password } = request.body;
     let token = '';
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
