@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const validateToken = require('../middlewares/validateToken');
 const readJsonData = require('../utils/fs/readJsonData');
 
 const router = express.Router();
@@ -21,6 +22,12 @@ router.get('/:id', async (request, response) => {
   
     if (talkerFound) return response.status(200).json(talkerFound);
     return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+});
+
+router.post('/', validateToken, async (_request, response) => {
+    // const newTalker = request.body;
+    const { authorization } = request.headers;
+    console.log(authorization);
 });
 
 module.exports = router;
