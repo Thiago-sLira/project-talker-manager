@@ -40,9 +40,13 @@ router.post('/',
 
         talkersData.push(newTalker);
         const talkersDataJSON = JSON.stringify(talkersData);
-        fs.writeFile(talkersPath, talkersDataJSON);
+        try {
+            fs.writeFile(talkersPath, talkersDataJSON);
+        } catch (error) {
+            console.log(error);
+        }
 
-        console.log(talkersData);
+        console.log(talkersDataJSON);
 
         return response.status(201).json([newTalker]);
     });
