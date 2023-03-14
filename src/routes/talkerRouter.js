@@ -1,10 +1,11 @@
 const express = require('express');
 const path = require('path');
-const validadeRate = require('../middlewares/validadeRate');
-const validadeWatchedAt = require('../middlewares/validadeWatchedAt');
-const validateNameAge = require('../middlewares/validateNameAge');
+const validateAge = require('../middlewares/validadeAge');
+const validateName = require('../middlewares/validateName');
 const validateToken = require('../middlewares/validateToken');
 const readJsonData = require('../utils/fs/readJsonData');
+const validateWatchedAt = require('../middlewares/validateWatchedAt');
+const validateRate = require('../middlewares/validateRate');
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.get('/:id', async (request, response) => {
 });
 
 router.post('/',
-    validateToken, validateNameAge, validadeWatchedAt, validadeRate,
+    validateToken, validateAge, validateName, validateWatchedAt, validateRate,
     async (request, response) => {
         const newTalker = request.body;
         response.status(201).json(newTalker);
