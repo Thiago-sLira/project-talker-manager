@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs').promises;
 const validateAge = require('../middlewares/validadeAge');
 const validateName = require('../middlewares/validateName');
 const validateToken = require('../middlewares/validateToken');
@@ -31,8 +32,19 @@ router.get('/:id', async (request, response) => {
 router.post('/',
     validateToken, validateAge, validateName, validateWatchedAt, validateRate,
     async (request, response) => {
-        const newTalker = request.body;
-        response.status(201).json(newTalker);
+        const { name, age, talk: { watchedAt, rate } } = request.body;
+        const talkersData = await readJsonData(talkersPath);
+        const newId = talkersData[talkersData.length - 1].id + 1;
+
+        const newTalker = { id: newId, name, age, talk: { watchedAt, rate } };
+
+        talkersData.push(newTalker);
+        const talkersDataJSON = JSON.stringify(talkersData);
+        fs.writeFile(talkersPath, talkersDataJSON);
+
+        console.log(talkersData);
+
+        return response.status(201).json([newTalker]);
     });
 
 module.exports = router;
