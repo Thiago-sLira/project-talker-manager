@@ -68,4 +68,15 @@ router.put('/:id',
         return response.status(200).json(talkerFound);
     });
 
+router.delete('/:id', validateToken, validateId, async (request, response) => {
+    const { id } = request.params;
+    const talkersData = await readJsonData(talkersPath);
+
+    const talkersFiltered = talkersData.filter((talker) => talker.id !== Number(id));
+    const talkersDataJSON = JSON.stringify(talkersFiltered);
+    await fs.writeFile(talkersPath, talkersDataJSON);
+
+    return response.status(204).send();
+});
+
 module.exports = router;
