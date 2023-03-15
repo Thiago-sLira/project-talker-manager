@@ -8,6 +8,7 @@ const readJsonData = require('../utils/fs/readJsonData');
 const validateWatchedAt = require('../middlewares/validateWatchedAt');
 const validateRate = require('../middlewares/validateRate');
 const validateId = require('../middlewares/validateId');
+const searchByName = require('../middlewares/searchByName');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.use(express.json());
 
 const talkersPath = path.join(__dirname, '../talker.json');
 
-router.get('/search', validateToken, async (request, response) => {
+router.get('/search', validateToken, searchByName, async (request, response) => {
     const { q } = request.query;
     const talkersData = await readJsonData(talkersPath);
     if (!q) {
