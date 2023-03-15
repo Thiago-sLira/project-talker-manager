@@ -25,6 +25,23 @@ router.get('/search',
         return response.status(200).json(result);
     });
 
+router.patch('/rate/:id', validateToken, async (request, response) => {
+    const { id } = request.params;
+    const { rate } = request.body;
+    const talkersData = await readJsonData(talkersPath);
+
+    for (let i = 0; i < talkersData.length; i += 1) {
+        const currentTalker = talkersData[i];
+        if (currentTalker.id === Number(id)) {
+            currentTalker.talk.rate = rate;
+        }
+    }
+    const talkersDataJSON = JSON.stringify(talkersData);
+    await fs.writeFile(talkersPath, talkersDataJSON);
+
+    return response.status(204).send();
+});
+
 router.get('/', async (_request, response) => {
     const talkersData = await readJsonData(talkersPath);
     if (talkersData.length > 0) return response.status(200).json(talkersData);
