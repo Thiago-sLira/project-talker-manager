@@ -12,12 +12,24 @@ const validateSearchByRate = require('../middlewares/validateSearchByRate');
 const validateSearchByDate = require('../middlewares/validateSearchByDate');
 const searchFilter = require('../utils/fs/searchFilter');
 const validateRateById = require('../middlewares/validateRateById');
+const connection = require('../connection');
+const buildObject = require('../utils/helpers/buildObject');
 
 const router = express.Router();
 
 router.use(express.json());
 
 const talkersPath = path.join(__dirname, '../talker.json');
+
+router.get('/db', async (_request, response) => {
+    const [result] = await connection.execute(`
+    SELECT * FROM TalkerDB.talkers`);
+    const talkersData = buildObject(result);
+    if (!result) {
+        return response.status(200).json([]);
+    }
+    return response.status(200).json(talkersData);
+});
 
 router.get('/search',
     validateToken, validateSearchByRate, validateSearchByDate,
