@@ -7,6 +7,7 @@ const validateToken = require('../middlewares/validateToken');
 const readJsonData = require('../utils/fs/readJsonData');
 const validateWatchedAt = require('../middlewares/validateWatchedAt');
 const validateRate = require('../middlewares/validateRate');
+const validateId = require('../middlewares/validateId');
 
 const router = express.Router();
 
@@ -40,10 +41,31 @@ router.post('/',
 
         talkersData.push(newTalker);
         const talkersDataJSON = JSON.stringify(talkersData);
-        console.log(talkersDataJSON);
         await fs.writeFile(talkersPath, talkersDataJSON);
 
         return response.status(201).json(newTalker);
+    });
+
+router.put('/:id',
+    validateToken, validateAge, validateName, validateWatchedAt, validateRate, validateId,
+    async (request, response) => {
+        const { id } = request.params;
+        const { name, age, talk: { watchedAt, rate } } = request.body;
+        const talkersData = await readJsonData(talkersPath);
+        for (let i = 0; i < talkersData.length; i += 1) {
+            const currentTalker = talkersData[i];
+            if (currentTalker.id === Number(id)) {
+                currentTalker.name = name;
+                currentTalker.age = age;
+                currentTalker.talk.watchedAt = watchedAt;
+                currentTalker.talk.rate = rate;
+            }
+        }
+        const talkersDataJSON = JSON.stringify(talkersData);
+        await fs.writeFile(talkersPath, talkersDataJSON);
+        const talkerFound = talkersData.find((talker) => talker.id === Number(id));
+
+        return response.status(200).json(talkerFound);
     });
 
 module.exports = router;
