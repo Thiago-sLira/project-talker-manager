@@ -42,7 +42,7 @@ router.post('/',
         const talkersDataJSON = JSON.stringify(talkersData);
         await fs.writeFile(talkersPath, talkersDataJSON);
 
-        return response.status(201).json([newTalker]);
+        return response.status(201).json(newTalker);
     });
 
 module.exports = router;
