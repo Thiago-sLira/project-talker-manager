@@ -11,6 +11,7 @@ const validateId = require('../middlewares/validateId');
 const validateSearchByRate = require('../middlewares/validateSearchByRate');
 const validateSearchByDate = require('../middlewares/validateSearchByDate');
 const searchFilter = require('../utils/fs/searchFilter');
+const validateRateById = require('../middlewares/validateRateById');
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get('/search',
         return response.status(200).json(result);
     });
 
-router.patch('/rate/:id', validateToken, async (request, response) => {
+router.patch('/rate/:id', validateToken, validateRateById, async (request, response) => {
     const { id } = request.params;
     const { rate } = request.body;
     const talkersData = await readJsonData(talkersPath);
