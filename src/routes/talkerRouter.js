@@ -9,6 +9,8 @@ const validateWatchedAt = require('../middlewares/validateWatchedAt');
 const validateRate = require('../middlewares/validateRate');
 const validateId = require('../middlewares/validateId');
 const validateSearchByRate = require('../middlewares/validateSearchByRate');
+const validateSearchByDate = require('../middlewares/validateSearchByDate');
+const searchFilter = require('../utils/fs/searchFilter');
 
 const router = express.Router();
 
@@ -16,22 +18,12 @@ router.use(express.json());
 
 const talkersPath = path.join(__dirname, '../talker.json');
 
-const filterSearch = async ({ q = '', rate = NaN }) => {
-    const talkersData = await readJsonData(talkersPath);
-    const talkersFiltered = talkersData.filter((talker) => {
-        '';
-
-        return talker.name.includes(q) 
-        && (rate ? talker.talk.rate === Number(rate) : true);
+router.get('/search',
+    validateToken, validateSearchByRate, validateSearchByDate,
+    async (request, response) => {
+        const result = await searchFilter(request.query);
+        return response.status(200).json(result);
     });
-    return talkersFiltered;
-};
-
-router.get('/search', validateToken, validateSearchByRate, async (request, response) => {
-    const result = await filterSearch(request.query);
-    console.log(result);
-    return response.status(200).json(result);
-});
 
 router.get('/', async (_request, response) => {
     const talkersData = await readJsonData(talkersPath);
