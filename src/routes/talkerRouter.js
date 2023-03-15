@@ -12,7 +12,7 @@ const validateSearchByRate = require('../middlewares/validateSearchByRate');
 const validateSearchByDate = require('../middlewares/validateSearchByDate');
 const searchFilter = require('../utils/fs/searchFilter');
 const validateRateById = require('../middlewares/validateRateById');
-const connection = require('../connection');
+const connection = require('../db/connection');
 const buildObject = require('../utils/helpers/buildObject');
 
 const router = express.Router();
