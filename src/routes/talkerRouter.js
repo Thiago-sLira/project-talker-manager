@@ -21,10 +21,8 @@ const filterSearch = async ({ q = '', rate = NaN }) => {
     const talkersFiltered = talkersData.filter((talker) => {
         '';
 
-        if (!rate) {
-            return talker.name.includes(q);
-        }
-        return talker.name.includes(q) && talker.talk.rate === Number(rate);
+        return talker.name.includes(q) 
+        && (rate ? talker.talk.rate === Number(rate) : true);
     });
     return talkersFiltered;
 };
