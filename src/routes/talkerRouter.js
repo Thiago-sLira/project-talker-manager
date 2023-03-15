@@ -15,6 +15,16 @@ router.use(express.json());
 
 const talkersPath = path.join(__dirname, '../talker.json');
 
+router.get('/search', validateToken, async (request, response) => {
+    const { q } = request.query;
+    const talkersData = await readJsonData(talkersPath);
+    if (!q) {
+        return response.status(200).json(talkersData);
+    }
+    const talkersFiltered = talkersData.filter(({ name }) => name.includes(q));
+    return response.status(200).json(talkersFiltered);
+});
+
 router.get('/', async (_request, response) => {
     const talkersData = await readJsonData(talkersPath);
     if (talkersData.length > 0) return response.status(200).json(talkersData);
